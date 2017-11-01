@@ -1,0 +1,48 @@
+# Turing
+
+## How it works:
+This script will connect to your IRC server (localhost by default) and respond to various prompts:
+- Typing ++ in IRC will give karma to an item (e.g. Turing++)
+- Typing -- in IRC will take karma away from an item (e.g. Turing--)
+- Typing !rank and then an item will let you know how much karma it has (e.g. !rank Turing)
+- Typing !top will list the top 5 items by karma
+- Typing !bottom will list the bottom 5 items by karma
+- Typing !weather City,State will provide weather info (e.g. !weather Bend,OR)
+- Typing !astronomy will provide moon information and sunset/sunrise time
+- Typing !$stock will provide a current quote for the stock specified (e.g. !$AMD)
+- Typing !help will print a list of options
+
+## Visual Examples:
+
+#### Weather
+
+![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/21195342/42991586-c1e8-11e6-9697-f9c79cf1eb32.PNG)
+
+#### Astronomy
+
+![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/21195315/28ad5fce-c1e8-11e6-81b5-1e9c3c86c284.PNG)
+
+#### Karma
+
+![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/21195292/0efb60b2-c1e8-11e6-9c9b-4c2c1248fdd2.PNG)
+
+#### Stock Quotes
+
+![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/23950769/1fab8d2e-095a-11e7-8d76-0e661770e3e6.PNG)
+
+#### Periodic Earthquake Check (see notes)
+
+![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/21195168/8c04aed4-c1e7-11e6-85a8-8534b9d5162e.PNG)
+
+#### Periodic Strava Activity Check (see notes)
+
+![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/22960593/cbeeb7c8-f2f3-11e6-8514-bc5ee76c8ebe.PNG)
+
+## Notes:
+
+- Turing will check every couple minutes for earthquakes around the world and report them in IRC.
+- Turing will check your Strava feed every couple minutes for new activities and report them in IRC.
+- Turing uses json load/dump to periodically store existing karma in a file and load it on startup.
+- Turing calls parameters from a config file called turing.cfg (typically dropped in /opt/turing with the script)
+
+### [The script is named after Alan Turing]
