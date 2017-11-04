@@ -416,7 +416,7 @@ def stravacheck():
 def marketopen():
     day = datetime.today().weekday()
     now = datetime.utcnow().time()
-    if day < 5 and now >= time(14, 30) and now <= time(21, 00):
+    if day < 5 and now >= time(13, 30) and now <= time(20, 00):
         return True
     else:
         return False
