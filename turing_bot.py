@@ -28,7 +28,6 @@ import re
 import ssl
 import sys
 import json
-import time
 import socket
 import urllib2
 import logging
