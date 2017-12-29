@@ -62,7 +62,9 @@ logging.basicConfig(filename=logfile, format=logformat, level=loglevel)
 try:
     tls = config.getboolean('IRC', 'tls')
     port = config.getint('IRC', 'port')
+    quake = config.getboolean('Features', 'quake')
     server = config.get('IRC', 'host')
+    strava = config.getboolean('Features', 'strava')
     channel = config.get('IRC', 'channel')
     botnick = config.get('IRC', 'nick')
     passreq = config.getboolean('IRC', 'passreq')
@@ -511,8 +513,22 @@ def connect():
 
 
 connect()
-quakecheck()
-stravacheck()
+
+if quake:
+    try:
+        quakecheck()
+    except BaseException:
+        message = "Unable to start quakecheck, starting Turing without it"
+        logging.critical(message)
+        pass
+
+if strava:
+    try:
+        stravacheck()
+    except BaseException:
+        message = "Unable to start stravacheck, starting Turing without it"
+        logging.critical(message)
+        pass
 
 while True:
     text = irc.recv(1024)
