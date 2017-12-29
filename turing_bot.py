@@ -17,7 +17,7 @@
 # +-----------------------------------------------------------------------+
 # | Date: 2017-12-28                                                      |
 # +-----------------------------------------------------------------------+
-# | Version: 1.5.5                                                        |
+# | Version: 1.5.6                                                        |
 # +-----------------------------------------------------------------------+
 
 ####################################################
@@ -185,7 +185,7 @@ else:
 
 def karmaup():
     try:
-        karma_up = (text.split("++")[0]).split(":")[2].rsplit(None, 1)[-1]
+        karma_up = (text.split("++")[0]).split(":")[2].rsplit(None, 1)[-1].lower()
     except IndexError:
         message = "What would you like to give Karma to? (e.g. Karmabot++)"
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
@@ -207,7 +207,7 @@ def karmaup():
 
 def karmadown():
     try:
-        karma_down = (text.split("--")[0]).split(":")[2].rsplit(None, 1)[-1]
+        karma_down = (text.split("--")[0]).split(":")[2].rsplit(None, 1)[-1].lower()
     except IndexError:
         message = "What would you like to take Karma away from? (e.g. Karmabot--)"
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
@@ -229,7 +229,7 @@ def karmadown():
 
 def karmarank():
     try:
-        rank = (text.split(':!rank')[1]).strip()
+        rank = (text.split(':!rank')[1]).strip().lower()
     except IndexError:
         message = "What would you like to check the rank of? (e.g. !rank Karmabot)"
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
