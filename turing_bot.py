@@ -69,8 +69,9 @@ try:
     botnick = config.get('IRC', 'nick')
     passreq = config.getboolean('IRC', 'passreq')
     mag_thresh = config.getint('Earthquake', 'mag_thresh')
-    strava_key = config.get('API Keys', 'strava_key')
     weather_key = config.get('API Keys', 'weather_key')
+    if strava:
+        strava_key = config.get('API Keys', 'strava_key')
     if passreq:
         password = config.get('IRC', 'password')
 except BaseException:
