@@ -17,7 +17,7 @@
 # +-----------------------------------------------------------------------+
 # | Date: 2017-12-28                                                      |
 # +-----------------------------------------------------------------------+
-# | Version: 1.5.6                                                        |
+# | Version: 1.5.7                                                        |
 # +-----------------------------------------------------------------------+
 
 ####################################################
@@ -32,6 +32,7 @@ import socket
 import urllib2
 import logging
 import threading
+from time import sleep
 from datetime import datetime, time
 from ConfigParser import ConfigParser
 
@@ -495,7 +496,7 @@ def connect():
         try:
             irc.connect((server, port))
         except socket.error:
-            time.sleep(30)
+            sleep(30)
             continue
         break
     if passreq:
@@ -552,12 +553,12 @@ while True:
     elif text.find('!$') != -1 and text.find(channel) != -1:
         stockcheck()
     elif text.find('!help') != -1 and text.find(channel) != -1:
-        time.sleep(.5)
+        sleep(.5)
         help()
     elif len(text) == 0:
         while True:
             try:
-                time.sleep(30)
+                sleep(30)
                 connect()
             except BaseException:
                 continue
