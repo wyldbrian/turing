@@ -419,9 +419,9 @@ def stravacheck():
 
 def dictionarycheck():
     try:
-        word = (text.split("!wut")[1]).strip()
+        word = (text.split("!define")[1]).strip()
     except IndexError:
-        message = "What word would you like to lookup the definition for? (e.g. !wut ace)"
+        message = "What word would you like to lookup the definition for? (e.g. !define ace)"
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
@@ -582,7 +582,7 @@ while True:
         karmaup()
     elif text.find('--') != -1 and text.find(channel) != -1:
         karmadown()
-    elif text.find('!wut') != -1 and text.find(channel) != -1:
+    elif text.find('!define') != -1 and text.find(channel) != -1:
         dictionarycheck()
     elif text.find('!rank') != -1 and text.find(channel) != -1:
         karmarank()
