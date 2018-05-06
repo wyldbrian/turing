@@ -519,6 +519,7 @@ def help():
     irc.send('PRIVMSG ' + channel + ' :' + "     !weather = check weather for a specific location (e.g. !weather Bend,OR)" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     ++ or -- = give or take karma from whatever you want (e.g. Turing++)" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     !rank = show the rank of a particular thing (e.g. !rank Turing)" + '\r\n')
+    irc.send('PRIVMSG ' + channel + ' :' + "     !define = lookup the definition of a word (e.g. !define chat)" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     !astronomy = check moon information and sunset/sunrise times" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     !top or !bottom = show the top or bottom 5 items by Karma" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     !$stock = show the current quote for a stock (e.g. !$AMD)" + '\r\n')
