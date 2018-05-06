@@ -15,9 +15,9 @@
 # +-----------------------------------------------------------------------+
 # | Authors: wyldbrian                                                    |
 # +-----------------------------------------------------------------------+
-# | Date: 2017-12-28                                                      |
+# | Date: 2018-05-06                                                      |
 # +-----------------------------------------------------------------------+
-# | Version: 1.5.7                                                        |
+# | Version: 1.6.0                                                        |
 # +-----------------------------------------------------------------------+
 
 ####################################################
@@ -69,6 +69,8 @@ try:
     channel = config.get('IRC', 'channel')
     botnick = config.get('IRC', 'nick')
     passreq = config.getboolean('IRC', 'passreq')
+    oxford_id = config.get('API Keys', 'oxford_id')
+    oxford_key = config.get('API Keys', 'oxford_key')
     mag_thresh = config.getint('Earthquake', 'mag_thresh')
     weather_key = config.get('API Keys', 'weather_key')
     if strava:
@@ -145,7 +147,7 @@ try:
     quakeload()
 except BaseException:
     logging.critical('Quakeload failed, exiting')
-    sys.exit()
+    #sys.exit()
 else:
     quakesave()
 
@@ -412,7 +414,47 @@ def stravacheck():
             logging.info(message)
 
 ####################################################
-#         Build functions for stock checks         #
+#       Build function for dictionary checks       #
+####################################################
+
+def dictionarycheck():
+    try:
+        word = (text.split("!wut")[1]).strip()
+    except IndexError:
+        message = "What word would you like to lookup the definition for? (e.g. !wut ace)"
+        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        return
+    try:
+        req = urllib2.Request('https://od-api.oxforddictionaries.com:443/api/v1/entries/en/%s' % (word))
+        req.add_header('accept', 'application/json')
+        req.add_header('app_id','%s' % (oxford_id) )
+        req.add_header('app_key','%s' % (oxford_key))
+        oxford_call = urllib2.urlopen(req, timeout=2)
+    except socket.timeout:
+        message = "Oxford API timed out, please try again in a few seconds."
+        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        logging.warning(message)
+        return
+    except urllib2.URLError:
+        message = "No results found for %s, please try a different word." % (word)
+        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        return
+    oxford_output = oxford_call.read()
+    oxford_call.close()
+    oxford_dict = json.loads(oxford_output)
+    #try:
+    type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory'][0]
+    definition = oxford_dict['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
+    #except BaseException:
+    #    message = ("Unknown API error occured, please try again later")
+    #    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+    #    logging.warning(message)
+    #    return
+    message = "%s(%s) - %s" % (word.capitalize(), type.lower(), definition.capitalize()) 
+    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+
+####################################################
+#         Build function for stock checks          #
 ####################################################
 
 
@@ -540,6 +582,8 @@ while True:
         karmaup()
     elif text.find('--') != -1 and text.find(channel) != -1:
         karmadown()
+    elif text.find('!wut') != -1 and text.find(channel) != -1:
+        dictionarycheck()
     elif text.find('!rank') != -1 and text.find(channel) != -1:
         karmarank()
     elif text.find('!top') != -1 and text.find(channel) != -1:
