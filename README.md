@@ -26,6 +26,10 @@ This script will connect to your IRC server (localhost by default) and respond t
 
 ![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/21195292/0efb60b2-c1e8-11e6-9c9b-4c2c1248fdd2.PNG)
 
+#### Dictionary
+
+![image](https://user-images.githubusercontent.com/7861962/39677455-e20c261c-512f-11e8-96e8-9051a44c1cdd.png)
+
 #### Stock Quotes
 
 ![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/23950769/1fab8d2e-095a-11e7-8d76-0e661770e3e6.PNG)
