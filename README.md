@@ -9,6 +9,7 @@ This script will connect to your IRC server (localhost by default) and respond t
 - Typing !bottom will list the bottom 5 items by karma
 - Typing !weather City,State will provide weather info (e.g. !weather Bend,OR)
 - Typing !astronomy will provide moon information and sunset/sunrise time
+- Typing !define will lookup a word's definition (e.g. !define chat)
 - Typing !$stock will provide a current quote for the stock specified (e.g. !$AMD)
 - Typing !help will print a list of options
 
