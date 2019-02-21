@@ -477,15 +477,15 @@ def stockcheck():
     try:
         url = 'https://finance.yahoo.com/quote/'
         content = urllib2.urlopen(url + stock).read()
-        name = re.search('shortName.:.(.*?).,.averageDailyVolume10Day', content).group(1)
+        name = re.search('Summary\sfor\s(.*?)\s-\sYahoo\sFinance', content).group(1)
         ticker = stock.upper()
         if marketopen():
-            price = re.search('data-reactid=.35.>(\d*\.\d*)</span>', content).group(1)
-            change = re.search('data-reactid=.36.>(.\d*\.?\d*.\(?.*?\(?)</span>', content).group(1)
+            price = re.search('data-reactid=.\d*.>(\d*\.\d*)</span>', content).group(1)
+            change = re.search('data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content).group(1)
             status = "\x0303Market Open\x03"
         else:
-            price = re.search('data-reactid=.35.>(\d*\.\d*)</span>', content).group(1)
-            change = re.search('data-reactid=.36.>(.\d*\.?\d*.\(?.*?\(?)</span>', content).group(1)
+            price = re.search('data-reactid=.\d*.>(\d*\.\d*)</span>', content).group(1)
+            change = re.search('data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content).group(1)
             status = "\x0304Market Closed\x03"
         if "+" in change:
             message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s\x03" % (ticker, name, status, price, change)
@@ -499,8 +499,7 @@ def stockcheck():
         message = "\x0304Please use the correct format (e.g. !$AMD)\x03"
     except BaseException:
         message = "\x0304Unknown error occured, please try again later\x03"
-    #irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
-    print (content)
+    irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
 
 ####################################################
 #              Build IRC help function             #
