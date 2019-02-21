@@ -450,7 +450,7 @@ def dictionarycheck():
     #    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
     #    logging.warning(message)
     #    return
-    message = "%s(%s) - %s" % (word.capitalize(), type.lower(), definition.capitalize()) 
+    message = "%s(%s) - %s" % (word.capitalize(), type.lower(), definition.capitalize())
     irc.send('PRIVMSG ' + channel + ' :' + message.encode('utf-8') + '\r\n')
 
 ####################################################
@@ -475,30 +475,27 @@ def stockcheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        url = 'http://finance.google.com/finance?q='
+        url = 'https://finance.yahoo.com/quote/'
         content = urllib2.urlopen(url + stock).read()
-        name = re.search("_companyName.=.*?['](.*?)[']", content).group(1)
-        ticker = re.search("_ticker.=.*?['](.*?)[']", content).group(1)
+        name = re.search('shortName.:.(.*?).,.averageDailyVolume10Day', content).group(1)
+        ticker = re.search('symbol.:.(.*?).,.underlyingExchangeSymbol', content).group(1)
         if marketopen():
-            price = re.search('id="ref_(.+)_l".*?>(.*?)<', content).group(2)
-            change = re.search('id="ref_(.+)_c".*?>(.*?)<', content).group(2)
-            percent = re.search('id="ref_(.+)_cp".*?>(.*?)<', content).group(2)
+            price = re.search('data-reactid=.35.>(.*?)</span>', content).group(1)
+            change = re.search('data-reactid=.36.>(.*?)</span>', content).group(1)
             status = "\x0303Market Open\x03"
         else:
             try:
-                price = re.search('id="ref_(.+)_el".*?>(.*?)<', content).group(2)
-                change = re.search('id="ref_(.+)_ec".*?>(.*?)<', content).group(2)
-                percent = re.search('id="ref_(.+)_ecp".*?>(.*?)<', content).group(2)
+                price = re.search('data-reactid=.35.>(.*?)</span>', content).group(1)
+                change = re.search('data-reactid=.36.>(.*?)</span>', content).group(1)
                 status = "\x0304Market Closed\x03"
             except AttributeError:
-                price = re.search('id="ref_(.+)_l".*?>(.*?)<', content).group(2)
-                change = re.search('id="ref_(.+)_c".*?>(.*?)<', content).group(2)
-                percent = re.search('id="ref_(.+)_cp".*?>(.*?)<', content).group(2)
+                price = re.search('data-reactid=.35.>(.*?)</span>', content).group(1)
+                change = re.search('data-reactid=.36.>(.*?)</span>', content).group(1)
                 status = "\x0304Market Closed\x03"
         if "+" in change:
-            message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s %s\x03" % (ticker, name, status, price, change, percent)
+            message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s\x03" % (ticker, name, status, price, change)
         else:
-            message = "%s | %s | %s | \x0304$%s\x03 | \x0304%s %s\x03" % (ticker, name, status, price, change, percent)
+            message = "%s | %s | %s | \x0304$%s\x03 | \x0304%s\x03" % (ticker, name, status, price, change)
     except socket.timeout:
         message = "\x0304Timeout occurred, please try again in a few seconds.\x03"
     except AttributeError:
