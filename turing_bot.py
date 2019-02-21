@@ -484,10 +484,9 @@ def stockcheck():
             change = re.search('data-reactid=.36.>(.\d*\.?\d*.\(?.*?\(?)</span>', content).group(1)
             status = "\x0303Market Open\x03"
         else:
-            try:
-                price = re.search('data-reactid=.35.>(\d*\.\d*)</span>', content).group(1)
-                change = re.search('data-reactid=.36.>(.\d*\.?\d*.\(?.*?\(?)</span>', content).group(1)
-                status = "\x0304Market Closed\x03"
+            price = re.search('data-reactid=.35.>(\d*\.\d*)</span>', content).group(1)
+            change = re.search('data-reactid=.36.>(.\d*\.?\d*.\(?.*?\(?)</span>', content).group(1)
+            status = "\x0304Market Closed\x03"
         if "+" in change:
             message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s\x03" % (ticker, name, status, price, change)
         else:
