@@ -478,7 +478,7 @@ def stockcheck():
         url = 'https://finance.yahoo.com/quote/'
         content = urllib2.urlopen(url + stock).read()
         name = re.search('shortName.:.(.*?).,.averageDailyVolume10Day', content).group(1)
-        ticker = re.search('symbol.:.(.*?).,.underlyingExchangeSymbol', content).group(1)
+        ticker = stock.upper()
         if marketopen():
             price = re.search('data-reactid=.35.>(.*?)</span>', content).group(1)
             change = re.search('data-reactid=.36.>(.*?)</span>', content).group(1)
