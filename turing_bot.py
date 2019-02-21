@@ -498,14 +498,12 @@ def stockcheck():
             message = "%s | %s | %s | \x0304$%s\x03 | \x0304%s\x03" % (ticker, name, status, price, change)
     except socket.timeout:
         message = "\x0304Timeout occurred, please try again in a few seconds.\x03"
-    except socket.error:
-        message = "\x0304Request blocked by Yahoo, please try again in a few minutes.\x03"
-    except AttributeError:
-        message = "\x0304No quote found, try the full ticker (e.g. !$NYSE:%s)\x03" % (stock.upper())
+    #except AttributeError:
+    #    message = "\x0304No quote found, try the full ticker (e.g. !$NYSE:%s)\x03" % (stock.upper())
     except urllib2.URLError:
         message = "\x0304Please use the correct format (e.g. !$AMD)\x03"
-    except BaseException:
-        message = "\x0304Unknown error occured, please try again later\x03"
+    #except BaseException:
+    #    message = "\x0304Unknown error occured, please try again later\x03"
     #irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
     print (message)
 
