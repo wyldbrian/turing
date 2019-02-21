@@ -498,6 +498,8 @@ def stockcheck():
             message = "%s | %s | %s | \x0304$%s\x03 | \x0304%s\x03" % (ticker, name, status, price, change)
     except socket.timeout:
         message = "\x0304Timeout occurred, please try again in a few seconds.\x03"
+    except socket.error:
+        message = "\x0304Request blocked by Yahoo, please try again in a few minutes.\x03"
     except AttributeError:
         message = "\x0304No quote found, try the full ticker (e.g. !$NYSE:%s)\x03" % (stock.upper())
     except urllib2.URLError:
