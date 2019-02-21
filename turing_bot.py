@@ -506,7 +506,7 @@ def stockcheck():
         message = "\x0304Please use the correct format (e.g. !$AMD)\x03"
     except BaseException:
         message = "\x0304Unknown error occured, please try again later\x03"
-    irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
+    #irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
 
 ####################################################
 #              Build IRC help function             #
