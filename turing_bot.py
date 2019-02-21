@@ -507,6 +507,7 @@ def stockcheck():
     except BaseException:
         message = "\x0304Unknown error occured, please try again later\x03"
     #irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
+    print (message)
 
 ####################################################
 #              Build IRC help function             #
