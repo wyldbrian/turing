@@ -488,22 +488,18 @@ def stockcheck():
                 price = re.search('data-reactid=.35.>(\d*\.\d*)</span>', content).group(1)
                 change = re.search('data-reactid=.36.>(.\d*\.?\d*.\(?.*?\(?)</span>', content).group(1)
                 status = "\x0304Market Closed\x03"
-            except AttributeError:
-                price = re.search('data-reactid=.35.>(\d*\.\d*)</span>', content).group(1)
-                change = re.search('data-reactid=.36.>(.\d*\.?\d*.\(?.*?\(?)</span>', content).group(1)
-                status = "\x0304Market Closed\x03"
         if "+" in change:
             message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s\x03" % (ticker, name, status, price, change)
         else:
             message = "%s | %s | %s | \x0304$%s\x03 | \x0304%s\x03" % (ticker, name, status, price, change)
     except socket.timeout:
         message = "\x0304Timeout occurred, please try again in a few seconds.\x03"
-    except AttributeError:
-        message = "\x0304No quote found, try the full ticker (e.g. !$NYSE:%s)\x03" % (stock.upper())
+    #except AttributeError:
+    #    message = "\x0304No quote found, try the full ticker (e.g. !$NYSE:%s)\x03" % (stock.upper())
     except urllib2.URLError:
         message = "\x0304Please use the correct format (e.g. !$AMD)\x03"
-    except BaseException:
-        message = "\x0304Unknown error occured, please try again later\x03"
+    #except BaseException:
+    #    message = "\x0304Unknown error occured, please try again later\x03"
     #irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
     print (message)
 
