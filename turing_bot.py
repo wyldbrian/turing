@@ -480,17 +480,17 @@ def stockcheck():
         name = re.search('shortName.:.(.*?).,.averageDailyVolume10Day', content).group(1)
         ticker = stock.upper()
         if marketopen():
-            price = re.search('data-reactid=.35.>(.*?)</span>', content).group(1)
-            change = re.search('data-reactid=.36.>(.*?)</span>', content).group(1)
+            price = re.search('data-reactid=.35.>(.*?)</span>', content).group(2)
+            change = re.search('data-reactid=.36.>(.*?)</span>', content).group(2)
             status = "\x0303Market Open\x03"
         else:
             try:
-                price = re.search('data-reactid=.35.>(.*?)</span>', content).group(1)
-                change = re.search('data-reactid=.36.>(.*?)</span>', content).group(1)
+                price = re.search('data-reactid=.35.>(.*?)</span>', content).group(2)
+                change = re.search('data-reactid=.36.>(.*?)</span>', content).group(2)
                 status = "\x0304Market Closed\x03"
             except AttributeError:
-                price = re.search('data-reactid=.35.>(.*?)</span>', content).group(1)
-                change = re.search('data-reactid=.36.>(.*?)</span>', content).group(1)
+                price = re.search('data-reactid=.35.>(.*?)</span>', content).group(2)
+                change = re.search('data-reactid=.36.>(.*?)</span>', content).group(2)
                 status = "\x0304Market Closed\x03"
         if "+" in change:
             message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s\x03" % (ticker, name, status, price, change)
