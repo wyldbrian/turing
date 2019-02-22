@@ -480,7 +480,7 @@ def stockcheck():
         name = re.search('Summary\sfor\s(.*?)\s-\sYahoo\sFinance', content).group(1)
         ticker = stock.upper()
         if marketopen():
-            price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[0]
+            price = re.findall(r'data-reactid=.\d*.>([0-9,*]+\.\d\d)</span><span\sclass=.Trsdu', content)[0]
             change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[0]
             status = "\x0303Market Open\x03"
         else:
@@ -489,7 +489,7 @@ def stockcheck():
                 change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[1]
                 status = "\x0304Market Closed\x03"
             except IndexError:
-                price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[0]
+                price = re.findall(r'data-reactid=.\d*.>([0-9,*]+\.\d\d)</span><span\sclass=.Trsdu', content)[0]
                 change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[0]
                 status = "\x0304Market Closed\x03"
         if "+" in change:
