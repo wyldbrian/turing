@@ -485,7 +485,7 @@ def stockcheck():
             status = "\x0303Market Open\x03"
         else:
             try:
-                price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[1]
+                price = re.findall(r'data-reactid=.\d*.>([0-9,*]+\.\d*)</span><!--', content)[1]
                 change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[1]
                 status = "\x0304Market Closed\x03"
             except IndexError:
