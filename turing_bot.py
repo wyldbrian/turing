@@ -484,9 +484,14 @@ def stockcheck():
             change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[0]
             status = "\x0303Market Open\x03"
         else:
-            price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[1]
-            change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[1]
-            status = "\x0304Market Closed\x03"
+            try:
+                price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[1]
+                change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[1]
+                status = "\x0304Market Closed\x03"
+            except IndexError:
+                price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[0]
+                change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[0]
+                status = "\x0304Market Closed\x03"
         if "+" in change:
             message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s\x03" % (ticker, name, status, price, change)
         else:
@@ -499,7 +504,7 @@ def stockcheck():
         message = "\x0304Please use the correct format (e.g. !$AMD)\x03"
     except BaseException:
         message = "\x0304Unknown error occured, please try again later\x03"
-    irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&") + '\r\n')
+    irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&").replace("&amp;", "&") + '\r\n')
 
 ####################################################
 #              Build IRC help function             #
