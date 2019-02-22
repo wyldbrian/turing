@@ -1,5 +1,4 @@
 #!/bin/python
-# -*- coding: utf-8 -*-
 
 # +-----------------------------------------------------------------------+
 # | File Name: turing_bot.py                                              |
@@ -481,12 +480,12 @@ def stockcheck():
         name = re.search('Summary\sfor\s(.*?)\s-\sYahoo\sFinance', content).group(1)
         ticker = stock.upper()
         if marketopen():
-            price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[1]
-            change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[1]
+            price = re.search('data-reactid=.\d*.>(\d*\.\d*)</span>', content).group(1)
+            change = re.search('data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content).group(1)
             status = "\x0303Market Open\x03"
         else:
-            price = re.findall(r'data-reactid=.\d*.>(\d*\.\d*)</span>', content)[2]
-            change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[2]
+            price = re.search('data-reactid=.\d*.>(\d*\.\d*)</span>', content).group(1)
+            change = re.search('data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content).group(1)
             status = "\x0304Market Closed\x03"
         if "+" in change:
             message = "%s | %s | %s | \x0303$%s\x03 | \x0303%s\x03" % (ticker, name, status, price, change)
