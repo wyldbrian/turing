@@ -476,8 +476,8 @@ def stockcheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        url = 'https://finance.yahoo.com/quote/'
-        content = urllib2.urlopen(url + stock).read()
+        url = 'https://finance.yahoo.com/quote/%s' % stock
+        content = requests.get(url, headers={"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36" })
         name = re.search('Summary\sfor\s(.*?)\s-\sYahoo\sFinance', content).group(1)
         ticker = stock.upper()
         if marketopen():
