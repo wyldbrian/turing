@@ -503,8 +503,8 @@ def stockcheck():
         message = "\x0304No quote found, try the full ticker (e.g. !$NYSE:%s)\x03" % (stock.upper())
     except urllib2.URLError:
         message = "\x0304Please use the correct format (e.g. !$AMD)\x03"
-    except BaseException:
-        message = "\x0304Unknown error occured, please try again later\x03"
+    #except BaseException:
+    #    message = "\x0304Unknown error occured, please try again later\x03"
     irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&").replace("&amp;", "&") + '\r\n')
 
 ####################################################
