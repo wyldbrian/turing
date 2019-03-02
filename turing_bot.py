@@ -30,6 +30,7 @@ import sys
 import json
 import socket
 import urllib2
+import requests
 import logging
 import threading
 from time import sleep
