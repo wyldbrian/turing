@@ -29,7 +29,6 @@ import ssl
 import sys
 import json
 import socket
-import urllib2
 import requests
 import logging
 import threading
@@ -277,14 +276,13 @@ def weathercheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        weather_call = urllib2.urlopen('http://api.wunderground.com/api/%s/geolookup/conditions/q/%s/%s.json' % (weather_key, state, city), timeout=2)
-    except (socket.timeout, urllib2.URLError):
+        req = requests.get('http://api.wunderground.com/api/%s/geolookup/conditions/q/%s/%s.json') % (weather_key, state, city)
+    except (socket.timeout, requests.RequestException):
         message = "Weather API timed out, please try again in a few seconds."
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         logging.warning(message)
         return
-    weather_output = weather_call.read()
-    weather_call.close()
+    weather_output = req.text
     weather_dict = json.loads(weather_output)
     try:
         temp = weather_dict['current_observation']['temperature_string']
@@ -316,13 +314,12 @@ def weathercheck():
 
 def astronomycheck():
     try:
-        astronomy_call = urllib2.urlopen('http://api.wunderground.com/api/%s//astronomy/q/OR/Bend.json' % (weather_key), timeout=2)
-    except (socket.timeout, urllib2.URLError):
+        req = requests.get('http://api.wunderground.com/api/%s//astronomy/q/OR/Bend.json') % weather_key
+    except (socket.timeout, requests.RequestException):
         message = "Caught timeout/url exception when hitting Weather Underground API"
         logging.critical(message)
         return
-    astronomy_output = astronomy_call.read()
-    astronomy_call.close
+    astronomy_output = req.text
     astronomy_dict = json.loads(astronomy_output)
     try:
         age = astronomy_dict['moon_phase']['ageOfMoon']
@@ -354,13 +351,12 @@ def astronomycheck():
 def quakecheck():
     threading.Timer(120, quakecheck).start()
     try:
-        quake_call = urllib2.urlopen('http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson', timeout=5)
+        req = requests.get('http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson')
     except (socket.timeout, requests.RequestException):
         message = "Caught timeout/url exception when contacting USGS API"
         logging.critical(message)
         return
-    quake_output = quake_call.read()
-    quake_call.close
+    quake_output = req.text
     quake_dict = json.loads(quake_output)
     global quake_id
     for quake in quake_dict['features']:
@@ -443,7 +439,7 @@ def dictionarycheck():
     except ValueError:
         message = "No results found for %s, please try a different word." % (word)
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
-        return    
+        return
     type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory'][0]
     definition = oxford_dict['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
     message = "%s(%s) - %s" % (word.capitalize(), type.lower(), definition.capitalize())
