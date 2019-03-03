@@ -425,7 +425,7 @@ def dictionarycheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/%s' $ word
+        url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/%s' % word
         headers = {
             'accept': 'application/json',
             'app_id': oxford_id,
