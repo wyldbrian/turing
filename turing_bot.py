@@ -437,7 +437,7 @@ def dictionarycheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         logging.warning(message)
         return
-    except requests.RequestException:
+    except ValueError:
         message = "No results found for %s, please try a different word." % (word)
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
