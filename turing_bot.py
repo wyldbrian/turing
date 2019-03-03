@@ -276,7 +276,8 @@ def weathercheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        req = requests.get('http://api.wunderground.com/api/%s/geolookup/conditions/q/%s/%s.json') % (weather_key, state, city)
+        url = 'http://api.wunderground.com/api/%s/geolookup/conditions/q/%s/%s.json' % (weather_key, state, city)
+        req = requests.get(url)
     except (socket.timeout, requests.RequestException):
         message = "Weather API timed out, please try again in a few seconds."
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
@@ -314,7 +315,8 @@ def weathercheck():
 
 def astronomycheck():
     try:
-        req = requests.get('http://api.wunderground.com/api/%s//astronomy/q/OR/Bend.json') % weather_key
+        url = 'http://api.wunderground.com/api/%s//astronomy/q/OR/Bend.json' % weather_key
+        req = requests.get(url)
     except (socket.timeout, requests.RequestException):
         message = "Caught timeout/url exception when hitting Weather Underground API"
         logging.critical(message)
