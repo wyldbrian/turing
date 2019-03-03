@@ -355,7 +355,7 @@ def quakecheck():
     threading.Timer(120, quakecheck).start()
     try:
         quake_call = urllib2.urlopen('http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson', timeout=5)
-    except (socket.timeout, urllib2.URLError):
+    except (socket.timeout, requests.RequestException):
         message = "Caught timeout/url exception when contacting USGS API"
         logging.critical(message)
         return
@@ -386,15 +386,14 @@ def quakecheck():
 def stravacheck():
     threading.Timer(120, stravacheck).start()
     try:
-        req = urllib2.Request('https://www.strava.com/api/v3/activities/following')
-        req.add_header('Authorization', 'Bearer %s' % (strava_key))
-        strava_call = urllib2.urlopen(req)
-    except (socket.timeout, urllib2.URLError):
+        url = 'https://www.strava.com/api/v3/activities/following'
+        headers = {'Authorization', 'Bearer %s'}  % strava_key
+        req  = requests.get(url, headers=headers)
+    except (socket.timeout, requests.RequestException):
         message = "Caught timeout/url exception when contacting Strava API"
         logging.critical(message)
         return
-    strava_output = strava_call.read()
-    strava_call.close
+    strava_output = req.text
     strava_dict = json.loads(strava_output)
     global strava_id
     for activity in strava_dict:
@@ -426,22 +425,23 @@ def dictionarycheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        req = urllib2.Request('https://od-api.oxforddictionaries.com:443/api/v1/entries/en/%s' % (word))
-        req.add_header('accept', 'application/json')
-        req.add_header('app_id','%s' % (oxford_id) )
-        req.add_header('app_key','%s' % (oxford_key))
-        oxford_call = urllib2.urlopen(req, timeout=2)
+        url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/%s' $ word
+        headers = {
+            'accept': 'application/json',
+            'app_id': oxford_id,
+            'app_key': oxford_key
+        }
+        req = requests.get(url, headers=headers)
     except socket.timeout:
         message = "Oxford API timed out, please try again in a few seconds."
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         logging.warning(message)
         return
-    except urllib2.URLError:
+    except requests.RequestException:
         message = "No results found for %s, please try a different word." % (word)
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
-    oxford_output = oxford_call.read()
-    oxford_call.close()
+    oxford_output = req.text.encode("utf-8")
     oxford_dict = json.loads(oxford_output)
     #try:
     type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory'][0]
@@ -452,7 +452,7 @@ def dictionarycheck():
     #    logging.warning(message)
     #    return
     message = "%s(%s) - %s" % (word.capitalize(), type.lower(), definition.capitalize())
-    irc.send('PRIVMSG ' + channel + ' :' + message.encode('utf-8') + '\r\n')
+    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
 
 ####################################################
 #         Build function for stock checks          #
@@ -479,7 +479,7 @@ def stockcheck():
         url = 'https://finance.yahoo.com/quote/%s' % stock
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'}
         req  = requests.get(url, headers=headers)
-        content = req.text.encode("utf-8") 
+        content = req.text.encode("utf-8")
         name = re.search('Summary\sfor\s(.*?)\s-\sYahoo\sFinance', content).group(1)
         ticker = stock.upper()
         if marketopen():
@@ -503,8 +503,6 @@ def stockcheck():
         message = "\x0304Timeout occurred, please try again in a few seconds.\x03"
     except AttributeError:
         message = "\x0304No quote found, try the full ticker (e.g. !$NYSE:%s)\x03" % (stock.upper())
-    except urllib2.URLError:
-        message = "\x0304Please use the correct format (e.g. !$AMD)\x03"
     except BaseException:
         message = "\x0304Unknown error occured, please try again later\x03"
     irc.send('PRIVMSG ' + channel + ' :' + message.replace("\\x26", "&").replace("&amp;", "&") + '\r\n')
