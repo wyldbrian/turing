@@ -437,20 +437,15 @@ def dictionarycheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         logging.warning(message)
         return
+    try:
+        oxford_output = req.text.encode("utf-8")
+        oxford_dict = json.loads(oxford_output)
     except ValueError:
         message = "No results found for %s, please try a different word." % (word)
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
-        return
-    oxford_output = req.text.encode("utf-8")
-    oxford_dict = json.loads(oxford_output)
-    #try:
+        return    
     type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory'][0]
     definition = oxford_dict['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
-    #except BaseException:
-    #    message = ("Unknown API error occured, please try again later")
-    #    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
-    #    logging.warning(message)
-    #    return
     message = "%s(%s) - %s" % (word.capitalize(), type.lower(), definition.capitalize())
     irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
 
