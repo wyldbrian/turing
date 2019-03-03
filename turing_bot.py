@@ -383,7 +383,7 @@ def stravacheck():
     threading.Timer(120, stravacheck).start()
     try:
         url = 'https://www.strava.com/api/v3/activities/following'
-        headers = {'Authorization', 'Bearer %s'}  % strava_key
+        headers = {'Authorization': 'Bearer %s'}  % strava_key
         req  = requests.get(url, headers=headers)
     except (socket.timeout, requests.RequestException):
         message = "Caught timeout/url exception when contacting Strava API"
