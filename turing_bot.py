@@ -136,7 +136,6 @@ def quakeload():
 
 
 def quakesave():
-    threading.Timer(30, quakesave).start()
     global quake_id
     save_quakes = file("quake_id.json", "w")
     save_quakes.write(json.dumps(quake_id))
@@ -145,11 +144,10 @@ def quakesave():
 
 try:
     quakeload()
+except ValueError:
+    logging.critical('Quakeload discovered no values, moving on.')
 except BaseException:
-    logging.critical('Quakeload failed, exiting')
-    #sys.exit()
-else:
-    quakesave()
+    logging.critical('Quakeload failed, moving on.')
 
 ####################################################
 #          Create strava save/load process         #
@@ -364,6 +362,7 @@ def quakecheck():
     for quake in quake_dict['features']:
         if quake['id'] not in quake_id:
             quake_id.append(quake['id'])
+            quakesave()
             mag = quake['properties']['mag']
             location = quake['properties']['place']
             message = "%s magnitude earthquake detected %s" % (mag, location)
@@ -554,7 +553,7 @@ if quake:
     try:
         quakecheck()
     except BaseException:
-        message = "Unable to start quakecheck, starting Turing without it"
+        message = "Unable to start quakecheck, starting Turing without it."
         logging.critical(message)
         pass
 
