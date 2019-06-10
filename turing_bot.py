@@ -435,7 +435,7 @@ def dictionarycheck():
         logging.warning(message)
         return
     try:
-        oxford_output = req.text.encode("utf-8")
+        oxford_output = req.text.encode('ascii', 'ignore')
         oxford_dict = json.loads(oxford_output)
     except ValueError:
         message = "No results found for %s, please try a different word." % (word)
