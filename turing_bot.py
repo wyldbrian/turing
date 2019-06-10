@@ -15,9 +15,9 @@
 # +-----------------------------------------------------------------------+
 # | Authors: wyldbrian                                                    |
 # +-----------------------------------------------------------------------+
-# | Date: 2019-03-14                                                      |
+# | Date: 2019-06-10                                                      |
 # +-----------------------------------------------------------------------+
-# | Version: 1.7.1                                                        |
+# | Version: 1.7.2                                                        |
 # +-----------------------------------------------------------------------+
 
 ####################################################
@@ -484,8 +484,8 @@ def stockcheck():
             }
         req  = requests.get(url, headers=headers)
         content = req.text.encode("utf-8")
-        name = re.search('Summary\sfor\s(.*?)\s-\sYahoo\sFinance', content).group(1)
         ticker = stock.upper()
+        name = re.findall(r'<title>(.*?)\(%s\)' % ticker, content)[0]
         if marketopen():
             price = re.findall(r'data-reactid=.\d*.>([0-9,*]+\.\d\d)</span><span\sclass=.Trsdu', content)[0]
             change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[0]
