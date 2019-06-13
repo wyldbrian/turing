@@ -485,7 +485,7 @@ def stockcheck():
         req  = requests.get(url, headers=headers)
         content = req.text.encode("utf-8")
         ticker = stock.upper()
-        name = re.findall(r'<title>(.*?)\(%s\)' % ticker, content)[0]
+        name = re.findall(r'<title>(.*?)\(%s\)' % ticker, content)[0].strip()
         if marketopen():
             price = re.findall(r'data-reactid=.\d*.>([0-9,*]+\.\d\d)</span><span\sclass=.Trsdu', content)[0]
             change = re.findall(r'data-reactid=.\d\d.>([-+]\d*\.?\d*.\([-+]?.*?\(?)</span>', content)[0]
