@@ -266,12 +266,7 @@ def bottomkarma():
 
 
 def weathercheck():
-    try:
-        zipcode = (text.split("!weather")[1]).strip()
-    except IndexError:
-        message = "What ZIP code (US only) would you like to check the weather of? (e.g. !weather 97701)"
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
-        return
+    zipcode = (text.split("!weather")[1]).strip()
     try:
         url = 'https://api.openweathermap.org/data/2.5/weather?zip=%s&units=imperial&appid=%s' % (zipcode, weather_key)
         req = requests.get(url)
@@ -298,6 +293,10 @@ def weathercheck():
             message = ("No weather results found for ZIP code %s") % zipcode
             irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
             logging.warning(message)
+            return
+        elif "Nothing to geocode" in weather_output:
+            message = "What ZIP code (US only) would you like to check the weather of? (e.g. !weather 97701)"
+            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
             return
         else:
             message = ("Unknown API error occured, please try again later")
