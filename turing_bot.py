@@ -17,7 +17,7 @@
 # +-----------------------------------------------------------------------+
 # | Date: 2019-07-22                                                      |
 # +-----------------------------------------------------------------------+
-# | Version: 1.7.3                                                        |
+# | Version: 1.7.4                                                        |
 # +-----------------------------------------------------------------------+
 
 ####################################################
@@ -267,14 +267,13 @@ def bottomkarma():
 
 def weathercheck():
     try:
-        city = (text.split("!weather")[1]).split(",")[0].lstrip().replace(" ", "_")
-        state = (text.split("!weather")[1]).split(",")[1].strip().replace(" ", "_")
+        zipcode = (text.split("!weather")[1]).strip()
     except IndexError:
-        message = "What city's weather would you like to check? (e.g. !weather Bend,OR)"
+        message = "What ZIP code (US only) would you like to check the weather of? (e.g. !weather 97701)"
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        url = 'http://api.wunderground.com/api/%s/geolookup/conditions/q/%s/%s.json' % (weather_key, state, city)
+        url = 'https://api.openweathermap.org/data/2.5/weather?zip=%s&units=imperial&appid=%s' % (zipcode, weather_key)
         req = requests.get(url)
     except (socket.timeout, requests.RequestException):
         message = "Weather API timed out, please try again in a few seconds."
@@ -284,17 +283,19 @@ def weathercheck():
     weather_output = req.text
     weather_dict = json.loads(weather_output)
     try:
-        temp = weather_dict['current_observation']['temperature_string']
-        location = weather_dict['location']['city']
-        condition = weather_dict['current_observation']['weather']
+        location = weather_dict['name']
+        tempf = weather_dict['main']['temp']
+        tempc = int((tempf - 32)*.5556)
+        humidity = weather_dict['main']['humidity']
+        condition = weather_dict['weather'][0]['description']
     except KeyError:
-        if "keynotfound" in weather_output or "missingkey" in weather_output:
+        if "requests limitation" in weather_output:
             message = ("Weather API rate limit reached, please try again in a few seconds.")
             irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
             logging.warning(message)
             return
-        elif "querynotfound" in weather_output or "conditions" in weather_output:
-            message = ("No weather results found for %s,%s" % (city.replace("_", " "), state.replace("_", " ")))
+        elif "city not found" in weather_output:
+            message = ("No weather results found for %s" % zipcode
             irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
             logging.warning(message)
             return
@@ -303,7 +304,7 @@ def weathercheck():
             irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
             logging.warning(message)
             return
-    message = "The weather in %s is currently showing %s with a temperature of %s" % (location, condition, temp)
+    message = "The weather in %s is currently showing %s with a temperature of %sF (%sC) and %s%% humidity" % (location, condition, tempf, tempc, humidity)
     irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
 
 ####################################################
