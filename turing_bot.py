@@ -523,7 +523,7 @@ def stockcheck():
 
 def help():
     irc.send('PRIVMSG ' + channel + ' :' + "     ##############################TURING USAGE##############################" + '\r\n')
-    irc.send('PRIVMSG ' + channel + ' :' + "     !weather = check weather for a specific location (e.g. !weather Bend,OR)" + '\r\n')
+    irc.send('PRIVMSG ' + channel + ' :' + "     !weather = check weather for a specific ZIP code (e.g. !weather 12345)" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     ++ or -- = give or take karma from whatever you want (e.g. Turing++)" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     !rank = show the rank of a particular thing (e.g. !rank Turing)" + '\r\n')
     irc.send('PRIVMSG ' + channel + ' :' + "     !define = lookup the definition of a word (e.g. !define chat)" + '\r\n')
