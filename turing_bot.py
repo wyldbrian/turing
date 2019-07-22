@@ -445,9 +445,14 @@ def dictionarycheck():
         type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory']['id'][:1]
         definition = oxford_dict['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
     except KeyError:
-        type = oxford_dict['results'][0]['lexicalEntries'][1]['lexicalCategory']['id'][:1]
-        definition = oxford_dict['results'][0]['lexicalEntries'][1]['entries'][0]['senses'][0]['definitions'][0]
-    except (KeyError, IndexError):
+        try:
+            type = oxford_dict['results'][0]['lexicalEntries'][1]['lexicalCategory']['id'][:1]
+            definition = oxford_dict['results'][0]['lexicalEntries'][1]['entries'][0]['senses'][0]['definitions'][0]
+        except KeyError:
+            message = "No results found for %s, please try a different word." % (word)
+            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            return
+    except IndexError:
         message = "No results found for %s, please try a different word." % (word)
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
