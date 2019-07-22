@@ -295,7 +295,7 @@ def weathercheck():
             logging.warning(message)
             return
         elif "Nothing to geocode" in weather_output:
-            message = "What ZIP code (US only) would you like to check the weather of? (e.g. !weather 97701)"
+            message = "What ZIP code (US only) would you like to check the weather of? (e.g. !weather 12345)"
             irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
             return
         else:
