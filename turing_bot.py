@@ -83,6 +83,13 @@ except BaseException:
     sys.exit()
 
 ####################################################
+#           Global IRC message function            #
+####################################################
+
+def chat(msg):
+    irc.send('PRIVMSG ' + channel + ' :' + msg + '\r\n')
+
+####################################################
 #          Create karma save/load process          #
 ####################################################
 
@@ -189,7 +196,7 @@ def karmaup():
         karma_up = (text.split("++")[0]).split(":")[2].rsplit(None, 1)[-1].lower()
     except IndexError:
         message = "What would you like to give Karma to? (e.g. Karmabot++)"
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         return
     if karma_up in karma_val:
         idx = karma_val.index(karma_up)
@@ -211,7 +218,7 @@ def karmadown():
         karma_down = (text.split("--")[0]).split(":")[2].rsplit(None, 1)[-1].lower()
     except IndexError:
         message = "What would you like to take Karma away from? (e.g. Karmabot--)"
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         return
     if karma_down in karma_val:
         idx = karma_val.index(karma_down)
@@ -233,16 +240,16 @@ def karmarank():
         rank = (text.split(':!rank')[1]).strip().lower()
     except IndexError:
         message = "What would you like to check the rank of? (e.g. !rank Karmabot)"
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         return
     if rank in karma_val:
         idx = karma_val.index(rank)
         num = karma_num[idx]
         message = (rank + " has " + str(num) + " points of karma!")
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
     elif rank not in karma_val:
         message = (rank + " doesn't have any karma yet!")
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
 
 
 def topkarma():
@@ -250,7 +257,7 @@ def topkarma():
     irc.send('PRIVMSG ' + channel + ' :' + "## TOP 5 KARMA RECIPIENTS ##" + '\r\n')
     for (x, y) in top_results:
         message = (y + ": " + str(x))
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
 
 
 def bottomkarma():
@@ -258,7 +265,7 @@ def bottomkarma():
     irc.send('PRIVMSG ' + channel + ' :' + "## BOTTOM 5 KARMA RECIPIENTS ##" + '\r\n')
     for (x, y) in top_results:
         message = (y + ": " + str(x))
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
 
 ####################################################
 #          Build weather function for IRC          #
@@ -272,7 +279,7 @@ def weathercheck():
         req = requests.get(url)
     except (socket.timeout, requests.RequestException):
         message = "Weather API timed out, please try again in a few seconds."
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         logging.warning(message)
         return
     weather_output = req.text
@@ -286,25 +293,25 @@ def weathercheck():
     except KeyError:
         if "requests limitation" in weather_output:
             message = ("Weather API rate limit reached, please try again in a few seconds.")
-            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            chat(message)
             logging.warning(message)
             return
         elif "city not found" in weather_output:
             message = ("No weather results found for ZIP code %s") % zipcode
-            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            chat(message)
             logging.warning(message)
             return
         elif "Nothing to geocode" in weather_output:
             message = "What ZIP code (US only) would you like to check the weather of? (e.g. !weather 12345)"
-            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            chat(message)
             return
         else:
             message = ("Unknown API error occured, please try again later")
-            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            chat(message)
             logging.warning(message)
             return
     message = "The weather in %s is currently showing %s with a temperature of %sF (%sC) and %s%% humidity" % (location, condition, tempf, tempc, humidity)
-    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+    chat(message)
 
 ####################################################
 #        Build function for astronomy checks       #
@@ -330,12 +337,12 @@ def astronomycheck():
     except KeyError:
         if "keynotfound" in astronomy_output or "missingkey" in astronomy_output:
             message = ("Weather API rate limit reached, please try again in a few seconds.")
-            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            chat(message)
             logging.warning(message)
             return
         else:
             message = ("Unknown API error occured, please try again later")
-            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            chat(message)
             logging.warning(message)
             return
     first_message = "Today the moon is %s days old, %s illuminated, and in its %s phase." % (age, illum + "%", phase)
@@ -368,7 +375,7 @@ def quakecheck():
             message = "%s magnitude earthquake detected %s" % (mag, location)
             try:
                 if int(mag) >= mag_thresh:
-                    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+                    chat(message)
                     logging.warning(message)
             except BaseException:
                 message = "Caught exception trying to post quake info to IRC"
@@ -403,7 +410,7 @@ def stravacheck():
             miles = round((activity['distance'] / 1609.344), 1)
             message = "%s %s just completed a %s mile %s - %s" % (first, last, miles, type, name)
             try:
-                irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+                chat(message)
             except BaseException:
                 message = "Caught exception trying to post strava info to IRC"
                 logging.critical(message)
@@ -419,7 +426,7 @@ def dictionarycheck():
         word = (text.split("!define")[1]).strip()
     except IndexError:
         message = "What word would you like to lookup the definition for? (e.g. !define ace)"
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         return
     try:
         url = 'https://od-api.oxforddictionaries.com:443/api/v2/entries/en/%s' % word
@@ -431,7 +438,7 @@ def dictionarycheck():
         req = requests.get(url, headers=headers)
     except socket.timeout:
         message = "Oxford API timed out, please try again in a few seconds."
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         logging.warning(message)
         return
     try:
@@ -439,7 +446,7 @@ def dictionarycheck():
         oxford_dict = json.loads(oxford_output)
     except ValueError:
         message = "No results found for %s, please try a different word." % (word)
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         return
     try:
         type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory']['id'][:1]
@@ -450,14 +457,14 @@ def dictionarycheck():
             definition = oxford_dict['results'][0]['lexicalEntries'][1]['entries'][0]['senses'][0]['definitions'][0]
         except KeyError:
             message = "No results found for %s, please try a different word." % (word)
-            irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+            chat(message)
             return
     except IndexError:
         message = "No results found for %s, please try a different word." % (word)
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         return
     message = "%s(%s) - %s" % (word.capitalize(), type.lower(), definition.capitalize())
-    irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+    chat(message)
 
 ####################################################
 #         Build function for stock checks          #
@@ -478,7 +485,7 @@ def stockcheck():
         stock = text.split(':!$')[1].rstrip()
     except IndexError:
         message = "\x0304Please use correct format (e.g. !$AMD)\x03"
-        irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
+        chat(message)
         return
     try:
         url = 'https://finance.yahoo.com/quote/%s' % stock
