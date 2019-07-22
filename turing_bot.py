@@ -422,7 +422,7 @@ def dictionarycheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/%s' % word
+        url = 'https://od-api.oxforddictionaries.com:443/api/v2/entries/en/%s' % word
         headers = {
             'accept': 'application/json',
             'app_id': oxford_id,
@@ -442,10 +442,10 @@ def dictionarycheck():
         irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
         return
     try:
-        type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory'][0]
+        type = oxford_dict['results'][0]['lexicalEntries'][0]['lexicalCategory']['id'][:1]
         definition = oxford_dict['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
     except KeyError:
-        type = oxford_dict['results'][0]['lexicalEntries'][1]['lexicalCategory'][0]
+        type = oxford_dict['results'][0]['lexicalEntries'][1]['lexicalCategory']['id'][:1]
         definition = oxford_dict['results'][0]['lexicalEntries'][1]['entries'][0]['senses'][0]['definitions'][0]
     except IndexError:
         message = "No results found for %s, please try a different word." % (word)
