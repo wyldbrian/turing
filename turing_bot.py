@@ -284,7 +284,7 @@ def weathercheck():
     weather_dict = json.loads(weather_output)
     try:
         location = weather_dict['name']
-        tempf = weather_dict['main']['temp']
+        tempf = int(weather_dict['main']['temp'])
         tempc = int((tempf - 32)*.5556)
         humidity = weather_dict['main']['humidity']
         condition = weather_dict['weather'][0]['description']
@@ -295,7 +295,7 @@ def weathercheck():
             logging.warning(message)
             return
         elif "city not found" in weather_output:
-            message = ("No weather results found for %s" % zipcode
+            message = ("No weather results found for ZIP code %s") % zipcode
             irc.send('PRIVMSG ' + channel + ' :' + message + '\r\n')
             logging.warning(message)
             return
