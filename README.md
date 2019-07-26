@@ -17,7 +17,7 @@ This script will connect to your IRC server (localhost by default) and respond t
 
 #### Weather
 
-![ScreenShot](https://cloud.githubusercontent.com/assets/7861962/21195342/61971078-04608b00-af93-11e9-82d0-8d81bb9a2a43.PNG)
+![image](https://user-images.githubusercontent.com/7861962/61971078-04608b00-af93-11e9-82d0-8d81bb9a2a43.png)
 
 #### Astronomy
 
