@@ -7,7 +7,7 @@ This script will connect to your IRC server (localhost by default) and respond t
 - Typing !rank and then an item will let you know how much karma it has (e.g. !rank Turing)
 - Typing !top will list the top 5 items by karma
 - Typing !bottom will list the bottom 5 items by karma
-- Typing !weather <ZIP code> will provide weather info (e.g. !weather 97701)
+- Typing !weather <ZIP code> will provide weather info (e.g. !weather 12345)
 - Typing !astronomy will provide moon information and sunset/sunrise time
 - Typing !define will lookup a word's definition (e.g. !define chat)
 - Typing !$stock will provide a current quote for the stock specified (e.g. !$AMD)
