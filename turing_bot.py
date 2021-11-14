@@ -3,10 +3,16 @@ import json
 import discord
 import requests
 import traceback
+import configparser
 from time import sleep
 from datetime import datetime, time
 
 client = discord.Client()
+config = configparser.ConfigParser()
+config.read('turing.ini')
+
+discord_token = config.get('Discord', 'token')
+weather_key = config.get('API Keys', 'weather_key') 
 
 @client.event
 async def on_ready():
@@ -31,7 +37,7 @@ async def on_message(msg):
 def weathercheck(msg):
     zipcode = msg.content.split("!weather")[1].strip()
     try:
-        url = 'https://api.openweathermap.org/data/2.5/weather?zip=%s&units=imperial&appid=%s' % (zipcode, 'cc63d4ac37d6dbadd22b75b4ec8de53c')
+        url = 'https://api.openweathermap.org/data/2.5/weather?zip=%s&units=imperial&appid=%s' % (zipcode, weather_key)
         req = requests.get(url)
     except (requests.RequestException):
         message = "Weather API timed out, please try again in a few seconds."
@@ -115,4 +121,4 @@ def stockcheck(msg):
         traceback.print_exc()
     return output
 
-client.run('ODk3NTY5MjgxOTA1MTUyMDEw.YWXkiA.LQiVrx7kfB_E8NUwRv78IMp824M')
+client.run(discord_token)
